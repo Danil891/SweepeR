@@ -2,12 +2,12 @@ package elementsForStream;
 
 public class Game {
 
-    private Bomb bomb;
+    private static Bomb bomb;
+
     private Flags flag;
     private GameState state;
     public boolean isFirst = true;
     public GameState getState() {
-
         return state;
     }
 
@@ -17,12 +17,12 @@ public class Game {
         flag = new Flags();
     }
 
-    public int getBombs() {
+    public static int getBombs() {
         return bomb.getTotalBombs();
     }
 
     public void start() {
-        bomb.start();
+
         flag.start();
         state = GameState.PLAYED;
         isFirst = true;
@@ -42,9 +42,7 @@ public class Game {
     public void pressLeftButton(Coordinates coord) {
         if (isFirst) {
             isFirst = false;
-            while (getFirstBox(coord) == Box.BOMB ) {
-                bomb.restart(coord);
-            }
+            bomb.restart(coord);
             openBox(coord);
         } else {
             if (gameOver()) return;

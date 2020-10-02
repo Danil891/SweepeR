@@ -28,7 +28,7 @@ public class FieldsFiller {
         return allCoords;
     }
 
-    static boolean inRange(Coordinates coord) {
+    static boolean inField(Coordinates coord) {
         return coord.x >= 0 && coord.x < size.x && coord.y >= 0 && coord.y < size.y;
     }
 
@@ -36,19 +36,17 @@ public class FieldsFiller {
         return new Coordinates(random.nextInt(size.x), random.nextInt(size.y));
     }
 
-    static ArrayList<Coordinates> getCoordsAround(Coordinates coord) {
+    public static ArrayList<Coordinates> getCoordsAround(Coordinates coord) {
         Coordinates around;
         int remove = coord.y % 2;
         ArrayList<Coordinates> list = new ArrayList<>();
         for (int x = coord.x - 1; x <= coord.x + 1; x++)
             for (int y = coord.y - 1; y <= coord.y + 1; y++)
-                if (inRange(around = new Coordinates(x, y)))
-                    if (!around.equals(coord) &&
-                            (remove == 1 && !around.equals(new Coordinates(coord.x - 1, coord.y - 1))
-                                    && !around.equals(new Coordinates(coord.x - 1, coord.y + 1))
-                                    || remove == 0 && !around.equals(new Coordinates(coord.x + 1, coord.y - 1))
-                                    && !around.equals(new Coordinates(coord.x + 1, coord.y + 1))))
-                        list.add(around);
+                if (inField(around = new Coordinates(x, y))) {
+                    Coordinates except1 = new Coordinates(remove == 0 ? coord.x + 1 : coord.x - 1, coord.y - 1);
+                    Coordinates except2 = new Coordinates(remove == 0 ? coord.x + 1 : coord.x - 1, coord.y + 1);
+                    if (!around.equals(coord) && !around.equals(except1) && !around.equals(except2)) list.add(around);
+                }
         return list;
     }
 }

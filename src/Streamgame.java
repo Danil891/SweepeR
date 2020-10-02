@@ -20,45 +20,38 @@ public class Streamgame extends JFrame {
     public static void main(String[] args){
         new Streamgame().initFrame();
     }
+
     private Streamgame(){
         initDialog();
         game = new Game(COLS, ROWS, BOMBS);
         game.start();
         setImages();
-
         initPanel();
         initLabel();
         initFrame();
-
-
     }
-
-    private void initFrame() {
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Minesweeper");
-        setResizable(false);
-        setVisible(true);
-        pack();
-        setLocationRelativeTo(null);
-        setIconImage(getImage("icon"));
-    }
-
 
     public void initDialog() {
         JPanel jpanel = new JPanel();
         String option = JOptionPane.showInputDialog(jpanel, "Please, enter Your args to play"
                 , JOptionPane.INFORMATION_MESSAGE);
         String[] input = option.split(" ");
-        COLS = Integer.parseInt(input[0]);
-        ROWS = Integer.parseInt(input[1]);
-        BOMBS = Integer.parseInt(input[2]);
+        try {
+            COLS = Integer.parseInt(input[0]);
+            ROWS = Integer.parseInt(input[1]);
+            BOMBS = Integer.parseInt(input[2]);
+
+            if (COLS < 3|| ROWS < 3  || BOMBS < 1) throw new NullPointerException();
+
+        } catch (RuntimeException e) {
+            JOptionPane.showInputDialog(jpanel, JOptionPane.showInputDialog(jpanel, "You are mistaken in the arguments"));
+        }
     }
 
     private void initLabel() {
         label = new JLabel(("Welcome!"));
         add(label, BorderLayout.SOUTH);
     }
-
 
    private void initPanel() {
         panel = new JPanel() {
@@ -70,6 +63,7 @@ public class Streamgame extends JFrame {
                             coord.y * (IMAGE_SIZE - DELTA_Y), this);
             }
         };
+
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -101,22 +95,18 @@ public class Streamgame extends JFrame {
         add(panel);
     }
 
-
-
     private String getMessage() {
         switch (game.getState()) {
             case PLAYED:
                 return "Think twice!";
             case BOMBED:
-                return "YOU LOSE!";
+                return "GAME OVER";
             case WINNER:
                 return "Congratulations!";
             default:
                 return "Welcome!";
         }
     }
-
-
 
     private Image getImage(String name) {
         String filename = "img/" + name.toLowerCase() + ".png";
@@ -127,6 +117,16 @@ public class Streamgame extends JFrame {
     private void setImages() {
         for (Box box : Box.values())
             box.image = getImage(box.name().toLowerCase());
+    }
+
+    private void initFrame() {
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Minesweeper");
+        setResizable(false);
+        setVisible(true);
+        pack();
+        setLocationRelativeTo(null);
+        setIconImage(getImage("icon"));
     }
 
 }

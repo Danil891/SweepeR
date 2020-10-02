@@ -45,6 +45,7 @@ public class Bomb {
     int getTotalBombs() {
         return totalBombs;
     }
+
     void restart(Coordinates coord) {
         bombMap = new Field(Box.ZERO);
         for (int i = 0; i < totalBombs; i++) placeBomb(coord);
